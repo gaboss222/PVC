@@ -21,11 +21,16 @@ class Solution:
             self.sol = list()
 
 if __name__ == "__main__":
+    #usage : python main.py [time limit] [maximum gen] [path]
     import sys
+    import time
     problem = list()
     path = ""
-    if len(sys.argv) == 2:
-        path = sys.argv[1]
+    maxGen = int(sys.argv[2])
+    timelimit = float(sys.argv[1])
+
+    if len(sys.argv) is 4:
+        path = sys.argv[3]
         with open(path) as f:
             for line in f:
                 words = line.split()
@@ -45,10 +50,14 @@ if __name__ == "__main__":
                     problem.append(City("v{:d}".format(len(problem)), x, y))
                 if event.type == pygame.QUIT:
                     running = False
-            for e in problem:
-                #print(str(e))
-                pygame.draw.circle(screen, circle_color, (e.x, e.y), 10, 3)
+            for c in problem:
+                pygame.draw.circle(screen, circle_color, (c.x, c.y), 10, 3)
             pygame.display.flip()
 
-
-        #Suite ..
+    time.clock()
+    nGen = 0
+    while True:
+        #Search happens there
+        if time.clock() > timelimit or nGen is maxGen:
+            break
+        nGen+=1
