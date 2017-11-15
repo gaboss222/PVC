@@ -31,4 +31,24 @@ if __name__ == "__main__":
                 words = line.split()
                 problem.append(City(words[0], int(words[1]), int(words[2])))
     else:
-        print("todo")
+        white = (255,255,255)
+        circle_color = (100,200,200)
+        (width, height) = (300, 300)
+        screen = pygame.display.set_mode((width, height))
+        running = True
+        while running:
+            #get data
+            screen.fill(white)
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    x,y = pygame.mouse.get_pos()
+                    problem.append(City("v{:d}".format(len(problem)), x, y))
+                if event.type == pygame.QUIT:
+                    running = False
+            for e in problem:
+                #print(str(e))
+                pygame.draw.circle(screen, circle_color, (e.x, e.y), 10, 3)
+            pygame.display.flip()
+
+
+        #Suite ..
