@@ -8,6 +8,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+v2.py
 data/
 env/
 build/

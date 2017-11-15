@@ -1,10 +1,7 @@
 from math import sqrt, pow
 import random
+import pygame
 
-testmode = True
-
-
-#classes
 class City:
     def __init__(self, n, x, y):
         self.n = n
@@ -23,44 +20,15 @@ class Solution:
         else:
             self.sol = list()
 
-    def score(self):
-        tot = 0
-        for i in range(len(self.sol) - 1):
-            tot+= City.score(self.sol[i], self.sol[i+1])
-        return tot
-
-    def legal(self):
-        return len(self.sol) is len(set(self.sol))   #https://stackoverflow.com/questions/5278122/checking-if-all-elements-in-a-list-are-unique
-
-    def crossover(self, s1, s2):
-        child = None
-        #todo
-
-    def swap(sol1, sol2, index):
-        temp = Solution(problem, False)
-        for i in range(len(sol1.sol)):
-            if i < index:
-                temp.sol.append(sol1.sol[i])
-            else:
-                temp.sol.append(sol2.sol[i])
-        return temp
-
-
-
-#populating our city list
-problem = list()
-
-with open('data/pb005.txt') as f:
-    for line in f:
-        words = line.split()
-        problem.append(City(words[0], int(words[1]), int(words[2])))
-
-sols = list()
-for i in range(0, 1000):
-    sols.append(Solution(problem))
-
-sols.sort(key=lambda sol : sol.score())
-
-print(sols[0].score())
-for e in sols[0].sol:
-    print(e.n)
+if __name__ == "__main__":
+    import sys
+    problem = list()
+    path = ""
+    if len(sys.argv) == 2:
+        path = sys.argv[1]
+        with open(path) as f:
+            for line in f:
+                words = line.split()
+                problem.append(City(words[0], int(words[1]), int(words[2])))
+    else:
+        print("todo")
