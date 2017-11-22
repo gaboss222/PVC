@@ -20,6 +20,19 @@ class Solution:
         else:
             self.sol = list()
 
+    def score(self):
+        tot = 0
+        for i in range(len(self.sol) - 1):
+            tot+= City.score(self.sol[i], self.sol[i+1])
+        return tot
+
+    def pyprint(self, screen):
+        for i in range(len(self.sol) - 1):
+            pygame.drawlline(screen, pink, (self.sol[i].x, self.sol[i].y), (self.sol[i+1].x, self.sol[i+1].y), width=1)
+
+    def legal(self):
+        return len(self.sol) is len(set(self.sol))   #source : https://stackoverflow.com/questions/5278122/checking-if-all-elements-in-a-list-are-unique
+
 if __name__ == "__main__":
     #usage : python main.py [time limit] [maximum gen] [path]
     import sys
@@ -28,6 +41,7 @@ if __name__ == "__main__":
     path = ""
     maxGen = int(sys.argv[2])
     timelimit = float(sys.argv[1])
+    print("maxGen : {:d}".format(maxGen))
 
     if len(sys.argv) is 4:
         path = sys.argv[3]
@@ -58,6 +72,7 @@ if __name__ == "__main__":
     nGen = 0
     while True:
         #Search happens there
-        if time.clock() > timelimit or nGen is maxGen:
+        if time.clock() >= timelimit or nGen >= maxGen:
             break
         nGen+=1
+    print("Search ended after {:f} seconds and {:d} generations".format(time.clock(), nGen))
