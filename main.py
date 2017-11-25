@@ -20,14 +20,17 @@ class City:
         return len(self.problem)
 
 
-def mutation(cities):
-    for c in cities:
-        #print(c)
-        if random.random() < 0.015:
-            c2 = int(len(cities) * random.random())
-
-
-
+def mutation(solutions):
+    chance_mutate = 0.01
+    for sol in solutions:
+        for pos1 in range(0, sol.getLength()-1):
+            if random.random() < chance_mutate:
+                pos2 = int(sol.getLength() * random.random())
+                city1 = sol.getCity(pos1)
+                city2 = sol.getCity(pos2)
+                
+                sol.setCity(pos1, city2)
+                sol.setCity(pos2, city1)
 
 class Solution:
     def __init__(self, problem, init = True):
@@ -41,6 +44,15 @@ class Solution:
         for i in range(len(self.sol) - 1):
             tot+= City.score(self.sol[i], self.sol[i+1])
         return tot
+        
+    def setCity(self, pos, city):
+        self.sol[pos] = city
+        
+    def getCity(self, pos):
+        return self.sol[pos]
+        
+    def getLength(self):
+        return len(self.sol)
 
     def pyprint(self, screen):
         for i in range(len(self.sol) - 1):
@@ -117,7 +129,7 @@ if __name__ == "__main__":
     solutions_sorted[0].screenPrint(screen)
 
     pygame.display.flip()
-    mutation(problem)
+    mutation(solutions_sorted)
 
 
     nGen = 0
