@@ -20,6 +20,20 @@ class City:
         return len(self.problem)
 
 
+<<<<<<< HEAD
+=======
+def mutation(solutions):
+    chance_mutate = 0.01
+    for sol in solutions:
+        for pos1 in range(0, sol.getLength()-1):
+            if random.random() < chance_mutate:
+                pos2 = int(sol.getLength() * random.random())
+                city1 = sol.getCity(pos1)
+                city2 = sol.getCity(pos2)
+                
+                sol.setCity(pos1, city2)
+                sol.setCity(pos2, city1)
+>>>>>>> c9763cee9dfd0e2344cf177e4586c5888b1205c5
 
 class Solution:
     def __init__(self, problem, init = True):
@@ -33,6 +47,15 @@ class Solution:
         for i in range(len(self.sol) - 1):
             tot+= City.score(self.sol[i], self.sol[i+1])
         return tot
+        
+    def setCity(self, pos, city):
+        self.sol[pos] = city
+        
+    def getCity(self, pos):
+        return self.sol[pos]
+        
+    def getLength(self):
+        return len(self.sol)
 
     def legal(self):
         return len(self.sol) is len(set(self.sol))   #source : https://stackoverflow.com/questions/5278122/checking-if-all-elements-in-a-list-are-unique
@@ -131,7 +154,7 @@ if __name__ == "__main__":
         print(solutions_sorted[i].score())
 
     pygame.display.flip()
-    mutation(problem)
+    mutation(solutions_sorted)
 
 
 
