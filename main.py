@@ -20,14 +20,6 @@ class City:
         return len(self.problem)
 
 
-def mutation(cities):
-    for c in cities:
-        #print(c)
-        if random.random() < 0.015:
-            c2 = int(len(cities) * random.random())
-
-
-
 
 class Solution:
     def __init__(self, problem, init = True):
@@ -42,16 +34,25 @@ class Solution:
             tot+= City.score(self.sol[i], self.sol[i+1])
         return tot
 
-    def pyprint(self, screen):
-        for i in range(len(self.sol) - 1):
-            pygame.drawlline(screen, pink, (self.sol[i].x, self.sol[i].y), (self.sol[i+1].x, self.sol[i+1].y), width=1)
-
     def legal(self):
         return len(self.sol) is len(set(self.sol))   #source : https://stackoverflow.com/questions/5278122/checking-if-all-elements-in-a-list-are-unique
 
     def screenPrint(self, screen):
         for i in range(len(self.sol) -1):
             pygame.draw.line(screen, white, (self.sol[i].x, self.sol[i].y), (self.sol[i+1].x, self.sol[i+1].y), 2)
+
+    def crossover(s1, s2):
+
+        children = []
+        length = len(s1.sol)
+        start = random.randint(0,length-1)
+        stop = random.randint(start + 1,length)
+        '''
+        for i in range(start, stop):
+            if i > start and i < stop:
+                child1 = s1[i]
+        '''
+
 
 
 if __name__ == "__main__":
@@ -103,28 +104,36 @@ if __name__ == "__main__":
             pygame.display.flip()
 
     #start searching
-    solutions = list()
-    time.clock()
-    for i in range(1000):
-        solutions.append(Solution(problem))
 
-    solutions_sorted = sorted(solutions, key=lambda x : x.score())
+    time.clock()
+    popSize = 2
+    solutions = list()
+    nGen = 0
+    #init
+    for i in range(popSize * 2):
+        solutions.append(Solution(problem))
+    while True:
+        #Selection
+        solutions = sorted(solutions, key=lambda x : x.score()) #elitiste
+        #Crossover
+        newSol = list()
+        bestPool = solutions[popSize:] #Halves solution ary
+        #Mutation
+        if time.clock() >= timelimit or nGen >= maxGen:
+            break
+        nGen+=1
+
+
+
+
 
     for i in range(10):
         print(solutions_sorted[i].score())
-    pygame.display.flip()
-
-    solutions_sorted[0].screenPrint(screen)
 
     pygame.display.flip()
     mutation(problem)
 
 
-    nGen = 0
-    while True:
-        #Search happens there
-        if time.clock() >= timelimit or nGen >= maxGen:
-            break
-        nGen+=1
+
 
     print("Search ended after {:f} seconds and {:d} generations".format(time.clock(), nGen))
