@@ -5,10 +5,10 @@ import pygame
 white = (255,255,255)
 
 
-#Classe définissant une ville
+#City class
 class City:
 
-    #Initialisation d'une ville, possède un nom et des coordonnées
+    #City has name and coords (x,y)
     def __init__(self, n, x, y):
         self.n = n
         self.x = x
@@ -17,14 +17,15 @@ class City:
     def __str__(self):
         return "name : {0} coords : ({1},{2})".format(self.n, self.x, self.y)
 
-    '''static func to return dist between two cities '''
+    #return dist between two cities
     def score(v1, v2):
         return sqrt(pow(v2.x - v1.x, 2)+pow(v2.y - v1.y, 2))
 
     def tailleProblem(self):
         return len(self.problem)
 
-def mutation(solutions, chance_mutate):
+#Mutate
+def mutate(solutions, chance_mutate):
     for sol in solutions:
         for pos1 in range(0, sol.getLength()-1):
             if random.random() < chance_mutate:
@@ -34,14 +35,26 @@ def mutation(solutions, chance_mutate):
                 sol.setCity(pos1, city2)
                 sol.setCity(pos2, city1)
 
-def crossover(s1,s2):
-    length = len(s1.sol)
+def crossover(parcours1,parcours2):
+    length = len(parcours1.sol)
     start = random.randint(0,length-1)
     stop = random.randint(start + 1,length)
     #print("start : {:d} stop : {:d}".format(start, stop))
 
-    selected_cities_y = s2.sol[start:stop]
-    selected_cities_x = s1.sol[start:stop]
+    #Check algo in arob98.pdf
+    
+    fa = True
+    fb = True
+    
+    
+    selected_cities_y = parcours2.sol[start:stop]
+    selected_cities_x = parcours1.sol[start:stop]
+    
+    do:
+        #selected_cities_x = selected_cities_x -1
+        if fa is True:
+            if selected_cities_x:
+        
 
     print("start : {:d} stop : {:d}".format(start, stop))
 
@@ -53,45 +66,47 @@ def crossover(s1,s2):
     for s in selected_cities_y:
         print(s.n)
 
-    s1.seq_print()
-    s2.seq_print()
+    parcours1.seq_print()
+    parcours2.seq_print()
 
-    for i in range(0, len(s2.sol)):
-        if s1.sol[i] in selected_cities_y:
-            s1.selectedIndices.append(i)
-            s1.sol[i] = None
+    for i in range(0, len(parcours2.sol)):
+        if parcours1.sol[i] in selected_cities_y:
+            parcours1.selectedIndices.append(i)
+            parcours1.sol[i] = None
 
-    for i in range(0, len(s1.sol)):
-        if s2.sol[i] in selected_cities_x:
-            s2.selectedIndices.append(i)
-            s2.sol[i] = None
+    for i in range(0, len(parcours1.sol)):
+        if parcours2.sol[i] in selected_cities_x:
+            parcours2.selectedIndices.append(i)
+            parcours2.sol[i] = None
 
-    print(s1.selectedIndices)
-    print(s2.selectedIndices)
+    print(parcours1.selectedIndices)
+    print(parcours2.selectedIndices)
 
-    s1.seq_print()
-    s2.seq_print()
+    parcours1.seq_print()
+    parcours2.seq_print()
 
-    child1_l = [None] * len(s1.sol)
-    child2_l = [None] * len(s2.sol)
+    child1_l = [None] * len(parcours1.sol)
+    child2_l = [None] * len(parcours2.sol)
 
-    for c in s2.sol[stop:-1]:
+    for c in parcours2.sol[stop:-1]:
         i = start
         if c is not None:
             child2_l[i] = c
             i+=1
 
-    for c in s2.sol[0:start-1]:
+    for c in parcours2.sol[0:start-1]:
         i = 0
         if c is not None:
             child2_l[i] = c
             i+=1
+    
+    #CHILDREN1 = selected_cities_x + selected_cities_y
+    #CHILDREN2 = selected_cities_y + selected_cities_x
 
 
 
 
-
-#Classe définissant une solution (liste de villes)
+#Class for solution(List of cities visited)
 class Solution:
     def __init__(self, problem = None, init = True):
         if (init):
@@ -100,30 +115,30 @@ class Solution:
             self.sol = list()
         self.selectedIndices = list()
 
-#Retourne la distance totale du parcours
+#Return dist totale
     def distTotale(self):
         tot = 0
         for i in range(len(self.sol) - 1):
             tot+= City.score(self.sol[i], self.sol[i+1])
         return tot
 
-#Set une ville à une certaine position du parcours
+#Set a city to a position
     def setCity(self, pos, city):
         self.sol[pos] = city
 
-#Retourne la ville à la position "pos" du parcours (solution)
+#Get city according to a position 
     def getCity(self, pos):
         return self.sol[pos]
 
-#Retourne la longueur du parcours
+#Return length
     def getLength(self):
         return len(self.sol)
 
-#Check si une ville n'apparait pas 2x dans la liste
+#Check if a city doesn't appear twice
     def legal(self):
         return len(self.sol) is len(set(self.sol))   #source : https://stackoverflow.com/questions/5278122/checking-if-all-elements-in-a-list-are-unique
 
-#Dessine les distances sur l'écran PyGame
+#Draw distance
     def screenPrint(self, screen):
         for i in range(len(self.sol) -1):
             pygame.draw.line(screen, white, (self.sol[i].x, self.sol[i].y), (self.sol[i+1].x, self.sol[i+1].y), 2)
@@ -231,7 +246,7 @@ if __name__ == "__main__":
         print(solutions_sorted[i].distTotale())
 
     #pygame.display.flip()
-    #mutation(solutions_sorted)
+    #mutate(solutions_sorted)
 
 
 
