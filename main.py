@@ -5,7 +5,10 @@ import pygame
 white = (255,255,255)
 
 
+#Classe définissant une ville
 class City:
+
+    #Initialisation d'une ville, possède un nom et des coordonnées
     def __init__(self, n, x, y):
         self.n = n
         self.x = x
@@ -87,6 +90,8 @@ def crossover(s1,s2):
 
 
 
+
+#Classe définissant une solution (liste de villes)
 class Solution:
     def __init__(self, problem = None, init = True):
         if (init):
@@ -95,24 +100,30 @@ class Solution:
             self.sol = list()
         self.selectedIndices = list()
 
-    def score(self):
+#Retourne la distance totale du parcours
+    def distTotale(self):
         tot = 0
         for i in range(len(self.sol) - 1):
             tot+= City.score(self.sol[i], self.sol[i+1])
         return tot
 
+#Set une ville à une certaine position du parcours
     def setCity(self, pos, city):
         self.sol[pos] = city
 
+#Retourne la ville à la position "pos" du parcours (solution)
     def getCity(self, pos):
         return self.sol[pos]
 
+#Retourne la longueur du parcours
     def getLength(self):
         return len(self.sol)
 
+#Check si une ville n'apparait pas 2x dans la liste
     def legal(self):
         return len(self.sol) is len(set(self.sol))   #source : https://stackoverflow.com/questions/5278122/checking-if-all-elements-in-a-list-are-unique
 
+#Dessine les distances sur l'écran PyGame
     def screenPrint(self, screen):
         for i in range(len(self.sol) -1):
             pygame.draw.line(screen, white, (self.sol[i].x, self.sol[i].y), (self.sol[i+1].x, self.sol[i+1].y), 2)
@@ -201,7 +212,7 @@ if __name__ == "__main__":
         solutions.append(Solution(problem))
     while True:
         #Selection
-        solutions = sorted(solutions, key=lambda x : x.score()) #elitiste
+        solutions = sorted(solutions, key=lambda x : x.distTotale()) #elitiste
         #Crossover
         newSol = list()
         bestPool = solutions[popSize:] #Halves solution ary
@@ -216,8 +227,8 @@ if __name__ == "__main__":
 
 
 
-    #for i in range(10):
-    #    print(solutions_sorted[i].score())
+    for i in range(10):
+        print(solutions_sorted[i].distTotale())
 
     #pygame.display.flip()
     #mutation(solutions_sorted)
