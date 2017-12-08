@@ -5,23 +5,25 @@ import pygame
 white = (255,255,255)
 
 
+#Classe définissant une ville
 class City:
+    
+    #Initialisation d'une ville, possède un nom et des coordonnées
     def __init__(self, n, x, y):
         self.n = n
         self.x = x
         self.y = y
     def __str__(self):
         return "name : {0}\n coords : ({1},{2})".format(self.n, self.x, self.y)
-    '''static func to return dist between two cities '''
+        
+    #Retourne distance entre 2 villes
     def score(v1, v2):
         return sqrt(pow(v2.x - v1.x, 2)+pow(v2.y - v1.y, 2))
-
+        
     def tailleProblem(self):
         return len(self.problem)
 
 
-<<<<<<< HEAD
-=======
 def mutation(solutions):
     chance_mutate = 0.01
     for sol in solutions:
@@ -33,8 +35,9 @@ def mutation(solutions):
                 
                 sol.setCity(pos1, city2)
                 sol.setCity(pos2, city1)
->>>>>>> c9763cee9dfd0e2344cf177e4586c5888b1205c5
 
+
+#Classe définissant une solution (liste de villes)
 class Solution:
     def __init__(self, problem, init = True):
         if (init):
@@ -42,28 +45,35 @@ class Solution:
         else:
             self.sol = list()
 
-    def score(self):
+#Retourne la distance totale du parcours
+    def distTotale(self):
         tot = 0
         for i in range(len(self.sol) - 1):
             tot+= City.score(self.sol[i], self.sol[i+1])
         return tot
         
+#Set une ville à une certaine position du parcours
     def setCity(self, pos, city):
         self.sol[pos] = city
         
+#Retourne la ville à la position "pos" du parcours (solution)
     def getCity(self, pos):
         return self.sol[pos]
         
+#Retourne la longueur du parcours
     def getLength(self):
         return len(self.sol)
 
+#Check si une ville n'apparait pas 2x dans la liste
     def legal(self):
         return len(self.sol) is len(set(self.sol))   #source : https://stackoverflow.com/questions/5278122/checking-if-all-elements-in-a-list-are-unique
 
+#Dessine les distances sur l'écran PyGame
     def screenPrint(self, screen):
         for i in range(len(self.sol) -1):
             pygame.draw.line(screen, white, (self.sol[i].x, self.sol[i].y), (self.sol[i+1].x, self.sol[i+1].y), 2)
 
+#Croisement
     def crossover(s1, s2):
 
         children = []
@@ -137,7 +147,7 @@ if __name__ == "__main__":
         solutions.append(Solution(problem))
     while True:
         #Selection
-        solutions = sorted(solutions, key=lambda x : x.score()) #elitiste
+        solutions = sorted(solutions, key=lambda x : x.distTotale()) #elitiste
         #Crossover
         newSol = list()
         bestPool = solutions[popSize:] #Halves solution ary
@@ -151,7 +161,7 @@ if __name__ == "__main__":
 
 
     for i in range(10):
-        print(solutions_sorted[i].score())
+        print(solutions_sorted[i].distTotale())
 
     pygame.display.flip()
     mutation(solutions_sorted)
