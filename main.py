@@ -24,6 +24,7 @@ class City:
     def tailleProblem(self):
         return len(self.problem)
 
+
 #Mutate
 def mutate(solutions, chance_mutate):
     for sol in solutions:
@@ -35,74 +36,74 @@ def mutate(solutions, chance_mutate):
                 sol.setCity(pos1, city2)
                 sol.setCity(pos2, city1)
 
+
 def crossover(parcours1,parcours2):
     length = len(parcours1.sol)
     start = random.randint(0,length-1)
     stop = random.randint(start + 1,length)
     #print("start : {:d} stop : {:d}".format(start, stop))
-
-    #Check algo in arob98.pdf
     
-    fa = True
-    fb = True
-    
-    
+    #Select cities between start and stop for each parcours
     selected_cities_y = parcours2.sol[start:stop]
     selected_cities_x = parcours1.sol[start:stop]
     
-    do:
-        #selected_cities_x = selected_cities_x -1
-        if fa is True:
-            if selected_cities_x:
-        
 
     print("start : {:d} stop : {:d}".format(start, stop))
 
 
-    print("selected cities in x : " )
+    #diplay selected cities
+    print("selected cities in parcours 1 : " )
     for s in selected_cities_x:
         print(s.n)
-    print("selected cities in y : " )
+    print("selected cities in parcours 2 : " )
     for s in selected_cities_y:
         print(s.n)
 
+    #Display cities
+    print("\nParcours 1 ") 
     parcours1.seq_print()
+    print("\nParcours 2 ") 
     parcours2.seq_print()
 
+    indice_x = list()
+    indice_y = list()
+    #Parcou
     for i in range(0, len(parcours2.sol)):
         if parcours1.sol[i] in selected_cities_y:
             parcours1.selectedIndices.append(i)
             parcours1.sol[i] = None
 
+    
     for i in range(0, len(parcours1.sol)):
         if parcours2.sol[i] in selected_cities_x:
             parcours2.selectedIndices.append(i)
             parcours2.sol[i] = None
 
-    print(parcours1.selectedIndices)
-    print(parcours2.selectedIndices)
+    
+    print('Indices selectionnées parcours 1 : ', parcours1.selectedIndices)
+    print('Indices selectionnées parcours 2 : ', parcours2.selectedIndices)
 
     parcours1.seq_print()
     parcours2.seq_print()
 
-    child1_l = [None] * len(parcours1.sol)
+    
+    child = list()
     child2_l = [None] * len(parcours2.sol)
-
-    for c in parcours2.sol[stop:-1]:
+    
+    #Parcours du point stop à la fin de la liste
+    for c in parcours2.sol[stop:len(parcours2.sol)-1]:
         i = start
         if c is not None:
-            child2_l[i] = c
+            child[i] = c.n
             i+=1
 
     for c in parcours2.sol[0:start-1]:
         i = 0
         if c is not None:
-            child2_l[i] = c
+            print(c.n)
+            child[i] = c.n
             i+=1
-    
-    #CHILDREN1 = selected_cities_x + selected_cities_y
-    #CHILDREN2 = selected_cities_y + selected_cities_x
-
+    return child
 
 
 
@@ -167,6 +168,43 @@ class Solution:
                 child1 = s1[i]
 '''
 
+def ga_solve(file=None, gui=True, maxtime=0):
+    
+
+    #start searching
+
+    time.clock()
+    popSize = 2
+    solutions = list()
+    nGen = 0
+    #init
+    for i in range(popSize * 2):
+        solutions.append(Solution(problem))
+        
+    print(solutions)
+    while True:
+        #Selection
+        solutions_sorted = sorted(solutions, key=lambda x : x.distTotale()) #elitiste
+        #Crossover
+        newSol = list()
+        bestPool = solutions[popSize:] #Halves solution ary
+        crossover(solutions[0], solutions[1])
+        #Mutation
+        nGen+=1
+        if time.clock() >= timelimit or nGen == maxGen:
+            break
+
+
+    for i in range(2):
+        print(solutions_sorted[i].distTotale())
+
+    #pygame.display.flip()
+    mutate(solutions_sorted)
+    
+
+
+    print("Search ended after {:f} seconds and {:d} generations".format(time.clock(), nGen))
+
 
 if __name__ == "__main__":
     #usage : python main.py [time limit] [maximum gen] [path]
@@ -195,6 +233,7 @@ if __name__ == "__main__":
                 #print city on screen
                 pygame.draw.circle(screen, circle_color, (e.x, e.y), 30, 3)
                 pygame.display.flip()
+        ga_solve(path, True, timelimit)
 
 
     else:
@@ -206,8 +245,8 @@ if __name__ == "__main__":
                     x,y = pygame.mouse.get_pos()
                     problem.append(City("v{:d}".format(len(problem)), x, y))
 
-                #if event.type is pygame.KEYDOWN and event.key is pygame.K_ESCAPE:
-                    #Run gen. Algo
+                if event.type is pygame.KEYDOWN and event.key is pygame.K_ESCAPE:
+                    ga_solve(None, True, timelimit)
 
                 if event.type == pygame.QUIT:
                     running = False
@@ -216,39 +255,5 @@ if __name__ == "__main__":
                 pygame.draw.circle(screen, circle_color, (c.x, c.y), 10, 3)
             pygame.display.flip()
 
-    #start searching
-
-    time.clock()
-    popSize = 2
-    solutions = list()
-    nGen = 0
-    #init
-    for i in range(popSize * 2):
-        solutions.append(Solution(problem))
-    while True:
-        #Selection
-        solutions = sorted(solutions, key=lambda x : x.distTotale()) #elitiste
-        #Crossover
-        newSol = list()
-        bestPool = solutions[popSize:] #Halves solution ary
-        crossover(solutions[0], solutions[1])
-        #Mutation
-        nGen+=1
-        if time.clock() >= timelimit or nGen == maxGen:
-            break
 
 
-
-
-
-
-    for i in range(10):
-        print(solutions_sorted[i].distTotale())
-
-    #pygame.display.flip()
-    #mutate(solutions_sorted)
-
-
-
-
-    print("Search ended after {:f} seconds and {:d} generations".format(time.clock(), nGen))
