@@ -78,6 +78,7 @@ def crossover(parcours1,parcours2):
         if parcours2.sol[i] in selected_cities_x:
             parcours2.selectedIndices.append(i)
             parcours2.sol[i] = None
+            indice_x.append(i)
 
     
     print('Indices selectionnées parcours 1 : ', parcours1.selectedIndices)
@@ -90,19 +91,40 @@ def crossover(parcours1,parcours2):
     child = list()
     child2_l = [None] * len(parcours2.sol)
     
-    #Parcours du point stop à la fin de la liste
-    for c in parcours2.sol[stop:len(parcours2.sol)-1]:
-        i = start
-        if c is not None:
-            child[i] = c.n
-            i+=1
+    for c in range(length):
+        if parcours1.sol[c] is not None:
+            child.append(parcours1.sol[c].n)
 
-    for c in parcours2.sol[0:start-1]:
-        i = 0
-        if c is not None:
-            print(c.n)
-            child[i] = c.n
-            i+=1
+    
+        
+    #for i in range(start-1, stop):
+    #child[i+(stop-start)] = child[i]
+    #   child[i]='*'
+        #print('\n',child[i])
+
+    #CONTINUE HERE !!!
+    for i, j in enumerate(range(0, len(child))):
+        print(i)
+        print(j)
+    
+    
+    #for i in range(0, len(child)):
+        #print(child[i])  
+        
+    #Parcours du point stop à la fin de la liste
+    #for c in parcours2.sol[stop:len(parcours2.sol)-1]:
+    #    i = start
+    #if c is not None:
+    #        child[i] = c.n
+    #        i+=1
+
+    #for c in parcours
+    #for c in parcours2.sol[0:start-1]:
+    #    i = 0
+    #    if c is not None:
+    #        print(c.n)
+    #        child[i] = c.n
+    #        i+=1
     return child
 
 
