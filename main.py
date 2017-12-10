@@ -39,14 +39,15 @@ def mutate(solutions, chance_mutate):
 
 def crossover(parcours1,parcours2):
     length = len(parcours1.sol)
+    print("length : ", length)
     start = random.randint(0,length-1)
     stop = random.randint(start + 1,length)
     #print("start : {:d} stop : {:d}".format(start, stop))
-    
+
     #Select cities between start and stop for each parcours
     selected_cities_y = parcours2.sol[start:stop]
     selected_cities_x = parcours1.sol[start:stop]
-    
+
 
     print("start : {:d} stop : {:d}".format(start, stop))
 
@@ -60,9 +61,9 @@ def crossover(parcours1,parcours2):
         print(s.n)
 
     #Display cities
-    print("\nParcours 1 ") 
+    print("\nParcours 1 ")
     parcours1.seq_print()
-    print("\nParcours 2 ") 
+    print("\nParcours 2 ")
     parcours2.seq_print()
 
     indice_x = list()
@@ -73,23 +74,23 @@ def crossover(parcours1,parcours2):
             parcours1.selectedIndices.append(i)
             parcours1.sol[i] = None
 
-    
+
     for i in range(0, len(parcours1.sol)):
         if parcours2.sol[i] in selected_cities_x:
             parcours2.selectedIndices.append(i)
             parcours2.sol[i] = None
 
-    
+
     print('Indices selectionnées parcours 1 : ', parcours1.selectedIndices)
     print('Indices selectionnées parcours 2 : ', parcours2.selectedIndices)
 
     parcours1.seq_print()
     parcours2.seq_print()
 
-    
+
     child = list()
     child2_l = [None] * len(parcours2.sol)
-    
+
     #Parcours du point stop à la fin de la liste
     for c in parcours2.sol[stop:len(parcours2.sol)-1]:
         i = start
@@ -122,12 +123,11 @@ class Solution:
         for i in range(len(self.sol) - 1):
             tot+= City.score(self.sol[i], self.sol[i+1])
         return tot
-
 #Set a city to a position
     def setCity(self, pos, city):
         self.sol[pos] = city
 
-#Get city according to a position 
+#Get city according to a position
     def getCity(self, pos):
         return self.sol[pos]
 
@@ -169,18 +169,16 @@ class Solution:
 '''
 
 def ga_solve(file=None, gui=True, maxtime=0):
-    
-
     #start searching
-
     time.clock()
     popSize = 2
     solutions = list()
     nGen = 0
+    print("tets")
     #init
     for i in range(popSize * 2):
         solutions.append(Solution(problem))
-        
+
     print(solutions)
     while True:
         #Selection
@@ -200,7 +198,7 @@ def ga_solve(file=None, gui=True, maxtime=0):
 
     #pygame.display.flip()
     mutate(solutions_sorted)
-    
+
 
 
     print("Search ended after {:f} seconds and {:d} generations".format(time.clock(), nGen))
@@ -254,6 +252,3 @@ if __name__ == "__main__":
             for c in problem:
                 pygame.draw.circle(screen, circle_color, (c.x, c.y), 10, 3)
             pygame.display.flip()
-
-
-
